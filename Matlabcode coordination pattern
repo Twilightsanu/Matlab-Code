@@ -1,0 +1,35 @@
+segment1_start = [x y z]
+];
+segment1_end = [x1 y1 z1];
+segment2_start = [x| y| z|];
+segment2_end = [x1| y1| z1|];
+% Calculate direction vectors
+direction_vector1 = segment1_end - segment1_start;
+direction_vector2 = segment2_end - segment2_start;
+
+% Normalize direction vectors
+normalized_vector1 = direction_vector1 / norm(direction_vector1);
+normalized_vector2 = direction_vector2 / norm(direction_vector2);
+
+% Calculate dot product
+dot_product = dot(normalized_vector1, normalized_vector2);
+
+% Clamp dot product to -1 or 1 to avoid numerical errors
+dot_product = max(-1, min(dot_product, 1));
+
+% Calculate coupling angle in radians
+coupling_angle_rad = acos(dot_product);
+
+% Convert to degrees if needed
+coupling_angle_deg = coupling_angle_rad * 180/pi;
+couplingAngles = coupling_angle_deg;
+% Classify angles based on defined criteria
+  coordination_pattern = zeros(size(couplingAngles));
+  coordination_pattern(couplingAngles >= 0  & couplingAngles < 45  | couplingAngles >= 180 & couplingAngles < 225) = 1;  % Proximal dominant In-phase
+  coordination_pattern(couplingAngles >= 45  & couplingAngles < 90  | couplingAngles >= 225 & couplingAngles < 270) = 2;  % Distal dominant In-phase
+  coordination_pattern(couplingAngles >= 90  & couplingAngles < 135 | couplingAngles >= 270 & couplingAngles < 315) = 3;  % Distal dominant Anti-phase
+  coordination_pattern(couplingAngles >= 135 & couplingAngles < 180 | couplingAngles >= 315 & couplingAngles < 360) = 4;  % Proximal dominant Anti-phase
+
+  % Display the classified patterns
+  disp('Classified Coordination Patterns:')
+  disp(coordination_pattern)
